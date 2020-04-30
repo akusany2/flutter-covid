@@ -1,5 +1,5 @@
 import 'package:covid/components/SubList.dart';
-import 'package:covid/model/APIResponseModel.dart';
+import 'package:covid/model/CovidAPIModel.dart';
 import 'package:covid/pages/ListDetail.dart';
 import 'package:covid/services/covidService.dart';
 import 'package:expandable/expandable.dart';
@@ -22,10 +22,9 @@ class _ListState extends State<List> {
           if (snapShot.hasData && snapShot.data != null) {
             return RefreshIndicator(
               child: ListView.builder(
-                  itemCount: snapShot.data.length,
+                  itemCount: snapShot.data.Countries.length,
                   itemBuilder: (context, index) {
-                    print(widget.filter);
-                    APIResponseModel item = snapShot.data[index];
+                    CovidAPIModel item = snapShot.data.Countries[index];
                     return widget.filter == "" || widget.filter == null
                         ? listBuilder(item, context)
                         : item.country
@@ -46,7 +45,7 @@ class _ListState extends State<List> {
     );
   }
 
-  ExpandablePanel listBuilder(APIResponseModel item, context) {
+  ExpandablePanel listBuilder(CovidAPIModel item, context) {
     return ExpandablePanel(
       theme: const ExpandableThemeData(
         headerAlignment: ExpandablePanelHeaderAlignment.center,
@@ -62,8 +61,8 @@ class _ListState extends State<List> {
       collapsed: Container(
         margin: EdgeInsets.only(bottom: 20),
         child: SubList(
-            label: "Total cases",
-            value: item.cases.toString(),
+            label: "Total confirmed",
+            value: item.totalConfirmed.toString(),
             secondary: true),
       ),
       expanded: Container(
@@ -85,20 +84,20 @@ class _ListState extends State<List> {
         child: Column(
           children: <Widget>[
             SubList(
-              label: "Total cases",
-              value: item.cases.toString(),
+              label: "Total confirmed",
+              value: item.totalConfirmed.toString(),
             ),
             SubList(
-              label: "Today cases",
-              value: item.todayCases.toString(),
+              label: "New confirmed",
+              value: item.newConfirmed.toString(),
             ),
             SubList(
-              label: "Today deaths",
-              value: item.todayDeaths.toString(),
+              label: "New deaths",
+              value: item.newDeaths.toString(),
             ),
             SubList(
               label: "Total deaths",
-              value: item.deaths.toString(),
+              value: item.totalDeaths.toString(),
             ),
             FlatButton(
                 onPressed: () {

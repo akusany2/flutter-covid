@@ -18,10 +18,12 @@ class CovidAPIService {
         .toList();
   }
 
-  static List<CovidAPIModel> parseJsonNew(json) {
-    return json
-        .map<CovidAPIModel>((item) => CovidAPIModel.fromJSON(item))
-        .toList();
+  static parseJsonNew(json) {
+    return {
+      "Global": json.Global,
+      "Countries": json.Countries.map<CovidAPIModel>(
+          (item) => CovidAPIModel.fromJSON(item)).toList()
+    };
   }
 
   static Future getAllData({bool forceUpdate = false}) async {
@@ -31,7 +33,8 @@ class CovidAPIService {
       final res = await http.get(localURLNew);
 
       // allData = await compute(CovidAPIService.parseJson, jsonDecode(res.body));
-      allData = await compute(CovidAPIService.parseJson, jsonDecode(res.body));
+      allData =
+          await compute(CovidAPIService.parseJsonNew, jsonDecode(res.body));
 
       return allData;
     }
