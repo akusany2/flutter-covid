@@ -1,5 +1,5 @@
 import 'package:covid/components/SubList.dart';
-import 'package:covid/model/CovidAPIModel.dart';
+import 'package:covid/model/CountriesModel.dart';
 import 'package:covid/pages/ListDetail.dart';
 import 'package:covid/services/covidService.dart';
 import 'package:expandable/expandable.dart';
@@ -8,23 +8,31 @@ import 'package:flutter/material.dart';
 class List extends StatefulWidget {
   List({this.filter});
   final String filter;
+
   @override
   _ListState createState() => _ListState();
 }
 
 class _ListState extends State<List> {
+  Future getCovidDataApi;
+  @override
+  void initState() {
+    super.initState();
+    getCovidDataApi = CovidAPIService.getAllData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: FutureBuilder(
-        future: CovidAPIService.getAllData(),
+        future: getCovidDataApi,
         builder: (context, snapShot) {
           if (snapShot.hasData && snapShot.data != null) {
             return RefreshIndicator(
               child: ListView.builder(
-                  itemCount: snapShot.data.Countries.length,
+                  itemCount: snapShot.data.countries.length,
                   itemBuilder: (context, index) {
-                    CovidAPIModel item = snapShot.data.Countries[index];
+                    CountriesModel item = snapShot.data.countries[index];
                     return widget.filter == "" || widget.filter == null
                         ? listBuilder(item, context)
                         : item.country
@@ -45,7 +53,7 @@ class _ListState extends State<List> {
     );
   }
 
-  ExpandablePanel listBuilder(CovidAPIModel item, context) {
+  ExpandablePanel listBuilder(CountriesModel item, context) {
     return ExpandablePanel(
       theme: const ExpandableThemeData(
         headerAlignment: ExpandablePanelHeaderAlignment.center,
@@ -101,7 +109,6 @@ class _ListState extends State<List> {
             ),
             FlatButton(
                 onPressed: () {
-                  print("clicked");
                   Navigator.pushNamed(context, ListDetail.id, arguments: item);
                 },
                 child: Text(

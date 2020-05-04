@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:covid/model/APIResponseModel.dart';
-import 'package:covid/model/CovidAPIModel.dart';
-import 'package:flutter/foundation.dart';
+import 'package:covid/model/CountriesModel.dart';
+import 'package:covid/model/CovidApiModel.dart';
+import 'package:covid/model/GlobalModel.dart';
 import 'package:http/http.dart' as http;
 
 class CovidAPIService {
@@ -18,25 +19,29 @@ class CovidAPIService {
         .toList();
   }
 
-  static parseJsonNew(json) {
-    return {
-      "Global": json.Global,
-      "Countries": json.Countries.map<CovidAPIModel>(
-          (item) => CovidAPIModel.fromJSON(item)).toList()
-    };
+  static CovidApiModel parseJsonNew(json) {
+    return CovidApiModel(
+        GlobalModel.fromJson(json["Global"]),
+        json["Countries"]
+            .map<CountriesModel>((item) => CountriesModel.fromJson(item))
+            .toList());
   }
 
   static Future getAllData({bool forceUpdate = false}) async {
-    if (!forceUpdate && allData != null && allData.length > 0) {
+    if (!forceUpdate && allData != null) {
       return await allData;
     } else {
       final res = await http.get(localURLNew);
 
       // allData = await compute(CovidAPIService.parseJson, jsonDecode(res.body));
-      allData =
-          await compute(CovidAPIService.parseJsonNew, jsonDecode(res.body));
+      // allData = await compute(CovidAPIService.parseJsonNew, jsonDecode(res.body));
+      allData = CovidAPIService.parseJsonNew(jsonDecode(res.body));
 
       return allData;
     }
+  }
+
+  static Stream get getData async* {
+    yield allData;
   }
 }

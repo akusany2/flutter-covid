@@ -1,5 +1,7 @@
 import 'package:covid/components/ListComponent.dart';
 import 'package:covid/constants.dart';
+import 'package:covid/model/CovidApiModel.dart';
+import 'package:covid/services/covidService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,8 +29,14 @@ class _ListPageState extends State<ListPage> {
 
   bool showClearIcon;
   final _searchInputController = TextEditingController();
+  CovidApiModel covidData;
   @override
   Widget build(BuildContext context) {
+    CovidAPIService.getData.listen((state) {
+      setState(() {
+        covidData = state;
+      });
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text("Places list"),
@@ -36,6 +44,18 @@ class _ListPageState extends State<ListPage> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("World Total Cases"),
+                  Text(covidData != null
+                      ? covidData.global.totalConfirmed.toString()
+                      : "---")
+                ],
+              ),
+            ),
             Row(
               children: <Widget>[
                 Expanded(
