@@ -41,7 +41,5 @@ class CovidAPIService {
     }
   }
 
-  static Stream get getData async* {
-    yield allData;
-  }
+  CovidApiModel get covidData => allData;
 }

@@ -1,55 +1,36 @@
 import 'package:covid/components/SubList.dart';
 import 'package:covid/model/CountriesModel.dart';
 import 'package:covid/pages/ListDetail.dart';
-import 'package:covid/services/covidService.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 
-class List extends StatefulWidget {
-  List({this.filter});
+// class List extends StatefulWidget {
+//   List({this.filter, this.snapShot});
+//   final String filter;
+//   final snapShot;
+
+//   @override
+//   _ListState createState() => _ListState();
+// }
+
+class List extends StatelessWidget {
+  List({this.filter, this.snapShot});
   final String filter;
-
-  @override
-  _ListState createState() => _ListState();
-}
-
-class _ListState extends State<List> {
-  Future getCovidDataApi;
-  @override
-  void initState() {
-    super.initState();
-    getCovidDataApi = CovidAPIService.getAllData();
-  }
+  final snapShot;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: FutureBuilder(
-        future: getCovidDataApi,
-        builder: (context, snapShot) {
-          if (snapShot.hasData && snapShot.data != null) {
-            return RefreshIndicator(
-              child: ListView.builder(
-                  itemCount: snapShot.data.countries.length,
-                  itemBuilder: (context, index) {
-                    CountriesModel item = snapShot.data.countries[index];
-                    return widget.filter == "" || widget.filter == null
-                        ? listBuilder(item, context)
-                        : item.country
-                                .toLowerCase()
-                                .contains(widget.filter.toLowerCase())
-                            ? listBuilder(item, context)
-                            : Container();
-                  }),
-              onRefresh: () => CovidAPIService.getAllData(forceUpdate: true),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
+      child: ListView.builder(
+          itemCount: snapShot.data.countries.length,
+          itemBuilder: (context, index) {
+            CountriesModel item = snapShot.data.countries[index];
+            return filter == "" || filter == null
+                ? listBuilder(item, context)
+                : item.country.toLowerCase().contains(filter.toLowerCase())
+                    ? listBuilder(item, context)
+                    : Container();
+          }),
     );
   }
 

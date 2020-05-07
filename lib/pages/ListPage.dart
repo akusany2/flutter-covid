@@ -1,6 +1,5 @@
 import 'package:covid/components/ListComponent.dart';
-import 'package:covid/constants.dart';
-import 'package:covid/model/CovidApiModel.dart';
+import 'package:covid/components/SearchInputComponent.dart';
 import 'package:covid/services/covidService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +11,14 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  bool showClearIcon;
+  Future getCovidDataApi;
+  final _searchInputController = TextEditingController();
+
   @override
   void initState() {
+    super.initState();
+    getCovidDataApi = CovidAPIService.getAllData();
     _searchInputController.addListener(() {
       setState(() {
         showClearIcon = _searchInputController.text.length > 0 ? true : false;
@@ -27,75 +32,56 @@ class _ListPageState extends State<ListPage> {
     super.dispose();
   }
 
-  bool showClearIcon;
-  final _searchInputController = TextEditingController();
-  CovidApiModel covidData;
   @override
   Widget build(BuildContext context) {
-    CovidAPIService.getData.listen((state) {
-      setState(() {
-        covidData = state;
-      });
-    });
     return Scaffold(
       appBar: AppBar(
         title: Text("Places list"),
       ),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text("World Total Cases"),
-                  Text(covidData != null
-                      ? covidData.global.totalConfirmed.toString()
-                      : "---")
-                ],
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Stack(
+      body: FutureBuilder(
+          future: getCovidDataApi,
+          builder: (context, snapShot) {
+            if (snapShot.hasData && snapShot.data != null) {
+              return SafeArea(
+                child: RefreshIndicator(
+                  onRefresh: () =>
+                      CovidAPIService.getAllData(forceUpdate: true),
+                  child: Column(
                     children: <Widget>[
-                      TextFormField(
-                        controller: _searchInputController,
-                        decoration: InputDecoration(
-                            hintText: 'Search country',
-                            contentPadding: EdgeInsets.only(left: 20)),
-                      ),
-                      Positioned(
-                        child: Visibility(
-                          visible: _searchInputController.text == null ||
-                                  _searchInputController.text == ""
-                              ? false
-                              : true,
-                          child: FlatButton(
-                            onPressed: () {
-                              _searchInputController.text = "";
-                            },
-                            child: Icon(
-                              Icons.highlight_off,
-                              color: ksecondaryTextColor,
-                            ),
-                          ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("World Total Cases"),
+                            Text(CovidAPIService.allData != null
+                                ? CovidAPIService.allData.global.totalConfirmed
+                                    .toString()
+                                : "---")
+                          ],
                         ),
-                        right: -20,
-                      )
+                      ),
+                      Row(
+                        children: <Widget>[
+                          SearchInputComponent(
+                              searchInputController: _searchInputController)
+                        ],
+                      ),
+                      Expanded(
+                        child: List(
+                            filter: _searchInputController.text,
+                            snapShot: snapShot),
+                      ),
                     ],
                   ),
-                )
-              ],
-            ),
-            Expanded(
-              child: List(filter: _searchInputController.text),
-            ),
-          ],
-        ),
-      ),
+                ),
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
     );
   }
 }
