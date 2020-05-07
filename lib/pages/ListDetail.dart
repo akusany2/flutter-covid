@@ -1,4 +1,5 @@
 import 'package:covid/model/CountriesModel.dart';
+import 'package:covid/sharedUtilities/camelCaseToUpperSpace.dart';
 import 'package:flutter/material.dart';
 
 class ListDetail extends StatelessWidget {
@@ -30,7 +31,7 @@ List<Widget> generateWidget(data) {
         child: Row(
           children: <Widget>[
             Text(
-              key,
+              camelCaseToUpperSpace(key),
               style: TextStyle(fontSize: 18),
             ),
             Text(

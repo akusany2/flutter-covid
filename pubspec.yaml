@@ -14,9 +14,6 @@ dependencies:
   expandable: ^4.1.3
   json_annotation: ^3.0.1
 
-  provider: ^4.0.5+1
-
-  after_init: ^0.1.2
   cupertino_icons: ^0.1.3
 
 dev_dependencies:

@@ -6,8 +6,8 @@ part 'CountriesModel.g.dart';
 class CountriesModel {
   @JsonKey(name: 'Country')
   String country;
-  @JsonKey(name: 'CountryCode')
-  String countryCode;
+  // @JsonKey(name: 'CountryCode')
+  // String countryCode;
   // @JsonKey(name: 'Slug')
   // String slug;
   @JsonKey(name: 'NewConfirmed')
@@ -22,14 +22,14 @@ class CountriesModel {
   int newRecovered;
   @JsonKey(name: 'TotalRecovered')
   int totalRecovered;
-  @JsonKey(name: 'Date')
-  String date;
+  // @JsonKey(name: 'Date')
+  // String date;
 
-  bool isOpened;
+  // bool isOpened;
 
   CountriesModel(
     this.country,
-    this.countryCode,
+    // this.countryCode,
     // this.slug,
     this.newConfirmed,
     this.totalConfirmed,
