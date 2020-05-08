@@ -22,27 +22,28 @@ class ListDetail extends StatelessWidget {
 }
 
 List<Widget> generateWidget(data) {
+  data.remove("Slug");
+  data.remove("Country");
+
   List<Widget> list = List<Widget>();
 
   data.forEach((key, value) {
-    if (key != "Country") {
-      list.add(Padding(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          children: <Widget>[
-            Text(
-              camelCaseToUpperSpace(key),
-              style: TextStyle(fontSize: 18),
-            ),
-            Text(
-              value.toString(),
-              style: TextStyle(fontSize: 18),
-            )
-          ],
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        ),
-      ));
-    }
+    list.add(Padding(
+      padding: EdgeInsets.all(10),
+      child: Row(
+        children: <Widget>[
+          Text(
+            camelCaseToUpperSpace(key),
+            style: TextStyle(fontSize: 18),
+          ),
+          Text(
+            value.toString(),
+            style: TextStyle(fontSize: 18),
+          )
+        ],
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      ),
+    ));
   });
 
   return list;

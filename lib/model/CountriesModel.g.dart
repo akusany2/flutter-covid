@@ -9,6 +9,7 @@ part of 'CountriesModel.dart';
 CountriesModel _$CountriesModelFromJson(Map<String, dynamic> json) {
   return CountriesModel(
     json['Country'] as String,
+    json['Slug'] as String,
     json['NewConfirmed'] as int,
     json['TotalConfirmed'] as int,
     json['NewDeaths'] as int,
@@ -21,6 +22,7 @@ CountriesModel _$CountriesModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$CountriesModelToJson(CountriesModel instance) =>
     <String, dynamic>{
       'Country': instance.country,
+      'Slug': instance.slug,
       'NewConfirmed': instance.newConfirmed,
       'TotalConfirmed': instance.totalConfirmed,
       'NewDeaths': instance.newDeaths,

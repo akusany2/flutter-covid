@@ -8,8 +8,8 @@ class CountriesModel {
   String country;
   // @JsonKey(name: 'CountryCode')
   // String countryCode;
-  // @JsonKey(name: 'Slug')
-  // String slug;
+  @JsonKey(name: 'Slug')
+  String slug;
   @JsonKey(name: 'NewConfirmed')
   int newConfirmed;
   @JsonKey(name: 'TotalConfirmed')
@@ -30,7 +30,7 @@ class CountriesModel {
   CountriesModel(
     this.country,
     // this.countryCode,
-    // this.slug,
+    this.slug,
     this.newConfirmed,
     this.totalConfirmed,
     this.newDeaths,
