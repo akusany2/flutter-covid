@@ -41,6 +41,15 @@ class _ListPageState extends State<ListPage> {
       body: FutureBuilder(
           future: getCovidDataApi,
           builder: (context, snapShot) {
+            if (snapShot.hasError) {
+              return Center(
+                child: Text(snapShot.error.toString()),
+                // child: Text(
+                //   "Something went wrong! API not reachable.",
+                //   style: TextStyle(fontSize: 16.0),
+                // ),
+              );
+            }
             if (snapShot.hasData && snapShot.data != null) {
               return SafeArea(
                 child: RefreshIndicator(

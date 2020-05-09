@@ -23,6 +23,7 @@ class List extends StatelessWidget {
     return Container(
       child: ListView.builder(
           itemCount: snapShot.data.countries.length,
+          physics: AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             CountriesModel item = snapShot.data.countries[index];
             return filter == "" || filter == null

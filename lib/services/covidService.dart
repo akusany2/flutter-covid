@@ -33,7 +33,7 @@ class CovidAPIService {
     if (!forceUpdate && allData != null) {
       return await allData;
     } else {
-      final res = await http.get(localURLNew);
+      final res = await http.get(countryDataUrl);
 
       // allData = await compute(CovidAPIService.parseJson, jsonDecode(res.body));
       // allData = await compute(CovidAPIService.parseJsonNew, jsonDecode(res.body));
